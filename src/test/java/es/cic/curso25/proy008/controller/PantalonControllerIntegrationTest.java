@@ -1,0 +1,124 @@
+package es.cic.curso25.proy008.controller;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import es.cic.curso25.proy008.model.Pantalon;
+import es.cic.curso25.proy008.repository.PantalonRepository;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class PantalonControllerIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private PantalonRepository pantalonRepository;
+
+    @Test
+    void testCreate() throws Exception {
+
+        Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+
+        String pantalonJson = objectMapper.writeValueAsString(pantalon);
+
+        mockMvc.perform(post("/pantalon")
+                .contentType("application/json")
+                .content(pantalonJson))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String respuesta = result.getResponse().getContentAsString();
+                    Pantalon pantalonCreado = objectMapper.readValue(respuesta, Pantalon.class);
+
+                    assertTrue(pantalonCreado.getId() == 1, "El valor debe ser mayor que 0");
+
+                    Optional<Pantalon> pantalonRealmenteCreado = pantalonRepository
+                            .findById(pantalonCreado.getId());
+                    assertTrue(pantalonRealmenteCreado.isPresent());
+
+                });
+
+    }
+
+    @Test
+    void testDelete() throws Exception {
+        Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+        Pantalon pantalonGuardado = pantalonRepository.save(pantalon);
+        Long id = pantalonGuardado.getId();
+
+        mockMvc.perform(delete("/pantalon/" + id))
+                .andExpect(status().isNoContent());
+        // ¿Qué hace .andExpect(status().isNoContent())?
+        // Este método verifica que la respuesta HTTP tenga el código de estado 204 No
+        // Content.
+        // No hay cuerpo en la respuesta (por eso se llama “No Content”).
+        // Es el código correcto para respuestas a DELETE exitosas según las buenas
+        // prácticas REST.
+    }
+
+    @Test
+    void testGetAll() throws Exception {
+        // Paso 1: Crear pantalones de prueba
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
+
+        // Paso 2: Guardarlos en la base de datos
+        pantalonRepository.save(pantalon1);
+        pantalonRepository.save(pantalon2);
+
+        // Paso 3: Hacer la petición GET a /pantalon
+        MvcResult resultado = mockMvc.perform(get("/pantalon"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Paso 4: Obtener el contenido JSON de la respuesta como texto
+        String contenidoJson = resultado.getResponse().getContentAsString();
+
+        // Paso 5: Convertir el JSON en una lista de objetos Pantalon
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Pantalon> lista = objectMapper.readValue(
+                contenidoJson,
+                new TypeReference<List<Pantalon>>() {
+                });
+
+        // Paso 6: Verificar que se devolvieron 2 pantalones
+        assertEquals(2, lista.size());
+
+        // Paso 7: Verificar que los datos son los esperados
+        assertEquals("Lewis", lista.get(0).getMarca());
+        assertEquals("Nike", lista.get(1).getMarca());
+    }
+
+    @Test
+    void testGet2() {
+
+    }
+
+    @Test
+    void testUpdate() {
+
+    }
+}
