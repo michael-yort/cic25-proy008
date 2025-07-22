@@ -32,6 +32,7 @@ public class PantalonService {
         if (pantalon.getId()!=null) {
             throw new ModificationSecurityException("No se debe incluir un id al crear un pantalon");
         }
+        LOGGER.info("Pantalon creado correctamente");
         return pantalonRepository.save(pantalon);
     }
 
@@ -46,6 +47,7 @@ public class PantalonService {
         if (!pantalonRepository.existsById(id)) {
             throw new IllegalArgumentException("El pantalón no existe.");
         }
+        LOGGER.info("Borrando pantalon con id "+ id);
         pantalonRepository.deleteById(id);
     }
 

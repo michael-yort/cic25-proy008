@@ -2,10 +2,8 @@ package es.cic.curso25.proy008.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +27,7 @@ public class PantalonServiceIntegrationTest {
         Long id = pantalonCreado.getId();
 
         assertNotNull(id);
-        
-        
+
     }
 
     @Test
@@ -87,10 +84,8 @@ public class PantalonServiceIntegrationTest {
         List<Pantalon> listaPantalones = pantalonService.get();
         Pantalon pantalonBuscado = listaPantalones.get(1);
 
-        Long id = pantalonBuscado.getId();
         String marca = pantalonBuscado.getMarca();
 
-       
         assertEquals("Nike", marca);
 
     }

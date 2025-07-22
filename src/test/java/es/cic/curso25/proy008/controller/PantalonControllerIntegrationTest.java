@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,169 +28,161 @@ import es.cic.curso25.proy008.repository.PantalonRepository;
 @AutoConfigureMockMvc
 public class PantalonControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @Autowired
-    private PantalonRepository pantalonRepository;
+        @Autowired
+        private PantalonRepository pantalonRepository;
 
-    @Test
-    void testCreate() throws Exception {
+        @Test
+        void testCreate() throws Exception {
 
-        Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
 
-        String pantalonJson = objectMapper.writeValueAsString(pantalon);
+                String pantalonJson = objectMapper.writeValueAsString(pantalon);
 
-        mockMvc.perform(post("/pantalon")
-                .contentType("application/json")
-                .content(pantalonJson))
-                .andExpect(status().isOk())
-                .andExpect(result -> {
-                    String respuesta = result.getResponse().getContentAsString();
-                    Pantalon pantalonCreado = objectMapper.readValue(respuesta, Pantalon.class);
+                mockMvc.perform(post("/pantalon")
+                                .contentType("application/json")
+                                .content(pantalonJson))
+                                .andExpect(status().isOk())
+                                .andExpect(result -> {
+                                        String respuesta = result.getResponse().getContentAsString();
+                                        Pantalon pantalonCreado = objectMapper.readValue(respuesta, Pantalon.class);
 
-                    assertTrue(pantalonCreado.getId() >= 1, "El valor debe ser mayor que 0");
+                                        assertTrue(pantalonCreado.getId() >= 1, "El valor debe ser mayor que 0");
 
-                    Optional<Pantalon> pantalonRealmenteCreado = pantalonRepository
-                            .findById(pantalonCreado.getId());
-                    assertTrue(pantalonRealmenteCreado.isPresent());
+                                        Optional<Pantalon> pantalonRealmenteCreado = pantalonRepository
+                                                        .findById(pantalonCreado.getId());
+                                        assertTrue(pantalonRealmenteCreado.isPresent());
 
-                });
+                                });
 
-    }
+        }
 
-    @Test
-    void testDelete() throws Exception {
-        Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
-        Pantalon pantalonGuardado = pantalonRepository.save(pantalon);
-        Long id = pantalonGuardado.getId();
+        @Test
+        void testDelete() throws Exception {
+                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalonGuardado = pantalonRepository.save(pantalon);
+                Long id = pantalonGuardado.getId();
 
-        mockMvc.perform(delete("/pantalon/" + id))
-                .andExpect(status().isOk());
-                
-                Optional <Pantalon> pantalonEliminado = pantalonRepository.findById(pantalon.getId());
+                mockMvc.perform(delete("/pantalon/" + id))
+                                .andExpect(status().isOk());
+
+                Optional<Pantalon> pantalonEliminado = pantalonRepository.findById(pantalon.getId());
 
                 assertTrue(pantalonEliminado.isEmpty());
 
+        }
 
-        // ¿Qué hace .andExpect(status().isNoContent())?
-        // Este método verifica que la respuesta HTTP tenga el código de estado 204 No
-        // Content.
-        // No hay cuerpo en la respuesta (por eso se llama “No Content”).
-        // Es el código correcto para respuestas a DELETE exitosas según las buenas
-        // prácticas REST.
-    }
+        @Test
+        void testGetAll() throws Exception {
+                // Paso 1: Crear pantalones de prueba
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
 
-    @Test
-    void testGetAll() throws Exception {
-        // Paso 1: Crear pantalones de prueba
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
+                // Paso 2: Guardarlos en la base de datos
+                pantalonRepository.deleteAll();
+                pantalonRepository.save(pantalon1);
+                pantalonRepository.save(pantalon2);
 
-        // Paso 2: Guardarlos en la base de datos
-        pantalonRepository.deleteAll();
-        pantalonRepository.save(pantalon1);
-        pantalonRepository.save(pantalon2);
+                // Paso 3: Hacer la petición GET a /pantalon
+                MvcResult resultado = mockMvc.perform(get("/pantalon"))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        // Paso 3: Hacer la petición GET a /pantalon
-        MvcResult resultado = mockMvc.perform(get("/pantalon"))
-                .andExpect(status().isOk())
-                .andReturn();
+                // Paso 4: Obtener el contenido JSON de la respuesta como texto
+                String contenidoJson = resultado.getResponse().getContentAsString();
 
-        // Paso 4: Obtener el contenido JSON de la respuesta como texto
-        String contenidoJson = resultado.getResponse().getContentAsString();
+                // Paso 5: Convertir el JSON en una lista de objetos Pantalon
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<Pantalon> lista = objectMapper.readValue(
+                                contenidoJson,
+                                new TypeReference<List<Pantalon>>() {
+                                });
 
-        // Paso 5: Convertir el JSON en una lista de objetos Pantalon
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Pantalon> lista = objectMapper.readValue(
-                contenidoJson,
-                new TypeReference<List<Pantalon>>() {
-                });
+                // Paso 6: Verificar que se devolvieron 2 pantalones
+                assertEquals(2, lista.size());
 
-        // Paso 6: Verificar que se devolvieron 2 pantalones
-        assertEquals(2, lista.size());
+                // Paso 7: Verificar que los datos son los esperados
+                assertEquals("Lewis", lista.get(0).getMarca());
+                assertEquals("Nike", lista.get(1).getMarca());
+        }
 
-        // Paso 7: Verificar que los datos son los esperados
-        assertEquals("Lewis", lista.get(0).getMarca());
-        assertEquals("Nike", lista.get(1).getMarca());
-    }
+        @Test
+        void testGet2() throws Exception {
 
-    @Test
-    void testGet2() throws Exception {
+                // Paso 1: Crear pantalones de prueba
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
+                Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true);
 
-        // Paso 1: Crear pantalones de prueba
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
-        Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true);
+                // Paso 2: Guardarlos en la base de datos
+                pantalonRepository.deleteAll();
+                pantalonRepository.save(pantalon1);
+                pantalonRepository.save(pantalon2);
+                pantalonRepository.save(pantalon3);
 
-        // Paso 2: Guardarlos en la base de datos
-        pantalonRepository.deleteAll();
-        pantalonRepository.save(pantalon1);
-        pantalonRepository.save(pantalon2);
-        pantalonRepository.save(pantalon3);
+                // Paso 3: Hacer la petición GET a /pantalon
+                MvcResult resultado = mockMvc.perform(get("/pantalon/2"))
+                                .andExpect(status().isOk())
+                                .andReturn();
 
-        // Paso 3: Hacer la petición GET a /pantalon
-        MvcResult resultado = mockMvc.perform(get("/pantalon/2"))
-                .andExpect(status().isOk())
-                .andReturn();
+                // Paso 4: Obtener el contenido JSON de la respuesta como texto
+                String contenidoJson = resultado.getResponse().getContentAsString();
 
-        // Paso 4: Obtener el contenido JSON de la respuesta como texto
-        String contenidoJson = resultado.getResponse().getContentAsString();
+                // Paso 5: Convertir el JSON en una lista de objetos Pantalon
+                ObjectMapper objectMapper = new ObjectMapper();
+                Pantalon pantalonBuscado = objectMapper.readValue(
+                                contenidoJson,
+                                new TypeReference<Pantalon>() {
+                                });
 
-        // Paso 5: Convertir el JSON en una lista de objetos Pantalon
-        ObjectMapper objectMapper = new ObjectMapper();
-        Pantalon pantalonBuscado = objectMapper.readValue(
-                contenidoJson,
-                new TypeReference<Pantalon>() {
-                });
+                // Paso 6: Verificar que se devolvieron 2 pantalones
+                assertEquals(2, pantalonBuscado.getId());
 
-        // Paso 6: Verificar que se devolvieron 2 pantalones
-        assertEquals(2, pantalonBuscado.getId());
+        }
 
-    }
+        @Test
+        void testUpdate() throws Exception {
 
-    @Test
-    void testUpdate() throws Exception {
+                // 1. Crear un hábito
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
 
-        // 1. Crear un hábito
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-        
+                String habitoJson = objectMapper.writeValueAsString(pantalon1);
+                String respuestaCreacion = mockMvc.perform(post("/pantalon")
+                                .contentType("application/json")
+                                .content(habitoJson))
+                                .andExpect(status().isOk())
+                                .andReturn()
+                                .getResponse()
+                                .getContentAsString();
 
-        String habitoJson = objectMapper.writeValueAsString(pantalon1);
-        String respuestaCreacion = mockMvc.perform(post("/pantalon")
-                .contentType("application/json")
-                .content(habitoJson))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                Pantalon pantalonCreado = objectMapper.readValue(respuestaCreacion, Pantalon.class);
+                Long idCreado = pantalonCreado.getId();
 
-        Pantalon pantalonCreado = objectMapper.readValue(respuestaCreacion, Pantalon.class);
-        Long idCreado = pantalonCreado.getId();
+                // 2. Modificar el hábito
+                pantalonCreado.setColor("Amarillo");
+                pantalonCreado.setTalla(40);
 
-        // 2. Modificar el hábito
-        pantalonCreado.setColor("Amarillo");
-        pantalonCreado.setTalla(40);
+                String habitoActualizadoJson = objectMapper.writeValueAsString(pantalonCreado);
 
-        String habitoActualizadoJson = objectMapper.writeValueAsString(pantalonCreado);
+                // 3. Hacer PUT con el ID en la URL
+                mockMvc.perform(put("/pantalon/" + idCreado)
+                                .contentType("application/json")
+                                .content(habitoActualizadoJson))
+                                .andExpect(status().isOk())
+                                .andExpect(result -> {
+                                        String respuesta = result.getResponse().getContentAsString();
+                                        Pantalon actualizado = objectMapper.readValue(respuesta, Pantalon.class);
 
-        // 3. Hacer PUT con el ID en la URL
-        mockMvc.perform(put("/pantalon/" + idCreado)
-                .contentType("application/json")
-                .content(habitoActualizadoJson))
-                .andExpect(status().isOk())
-                .andExpect(result -> {
-                    String respuesta = result.getResponse().getContentAsString();
-                    Pantalon actualizado = objectMapper.readValue(respuesta, Pantalon.class);
+                                        // Verificar los cambios
+                                        assertEquals("Amarillo", actualizado.getColor());
+                                        assertEquals(40, actualizado.getTalla());
+                                        assertEquals(idCreado, actualizado.getId());
+                                });
 
-                    // Verificar los cambios
-                    assertEquals("Amarillo", actualizado.getColor());
-                    assertEquals(40, actualizado.getTalla());
-                    assertEquals(idCreado, actualizado.getId());
-                });
-
-    }
+        }
 }
