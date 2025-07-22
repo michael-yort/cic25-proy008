@@ -42,4 +42,8 @@ public class CamisetaService {
     public void delete(long id) {
         camisetaRepository.deleteById(id);
     }
+    
+    public void deleteAll() {
+        camisetaRepository.deleteAll();
+    }
 }

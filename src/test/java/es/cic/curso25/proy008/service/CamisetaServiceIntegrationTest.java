@@ -20,6 +20,8 @@ public class CamisetaServiceIntegrationTest {
 
     @Test
     void testCreate() {
+        camisetaService.deleteAll();
+
         Camiseta camiseta1 = new Camiseta(40, "azul", "Nike", true);
         camisetaService.create(camiseta1);
 
@@ -29,8 +31,10 @@ public class CamisetaServiceIntegrationTest {
 
     @Test
     void testGetById() {
+        camisetaService.deleteAll();
+
         Camiseta camiseta1 = new Camiseta(41, "verde", "Adidas", false);
-        camiseta1 = camisetaService.create(camiseta1);
+        camisetaService.create(camiseta1);
 
         Camiseta encontrada = camisetaService.getById(camiseta1.getId()).orElse(null);
         assertTrue(encontrada != null);
@@ -38,6 +42,7 @@ public class CamisetaServiceIntegrationTest {
 
     @Test
     void testGetAll() {
+        camisetaService.deleteAll();
 
         Camiseta camiseta1 = new Camiseta(38, "gris", "Nike", true);
         Camiseta camiseta2 = new Camiseta(40, "azul", "Adidas", false);
@@ -45,12 +50,14 @@ public class CamisetaServiceIntegrationTest {
         camisetaService.create(camiseta1);
         camisetaService.create(camiseta2);
 
-        List<Camiseta> camisetas = camisetaService.getAll();
-        assertTrue(camisetas.size() == 2);
+        List<Camiseta> camisetasGetAllTest = camisetaService.getAll();
+        assertTrue(camisetasGetAllTest.size() == 2);
     }
 
     @Test
     void testUpdate() {
+        camisetaService.deleteAll();
+
         Camiseta camiseta1 = new Camiseta(42, "negro", "Versace", true);
         camiseta1 = camisetaService.create(camiseta1);
 
@@ -62,6 +69,7 @@ public class CamisetaServiceIntegrationTest {
 
     @Test
     void testDelete() {
+        camisetaService.deleteAll();
 
         Camiseta camiseta1 = new Camiseta(41, "verde", "Zara", false);
         camisetaService.create(camiseta1);
