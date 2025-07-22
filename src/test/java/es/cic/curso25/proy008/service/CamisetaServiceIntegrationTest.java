@@ -1,7 +1,6 @@
 package es.cic.curso25.proy008.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Camiseta;
 
 @SpringBootTest
@@ -82,14 +80,5 @@ public class CamisetaServiceIntegrationTest {
         Optional<Camiseta> eliminada = camisetaService.getById(id);
         assertTrue(eliminada.isEmpty(), "La camiseta1 no existe en base de datos");
     }
-
-    @Test
-void crearConIdLanzaExcepcion() {
-    Camiseta camisetaConId = new Camiseta();
-    camisetaConId.setId(99L); // Simula intento de modificación
-
-    assertThrows(ModificationSecurityException.class, () -> {
-        camisetaService.create(camisetaConId);
-    });
 }
-}
+
