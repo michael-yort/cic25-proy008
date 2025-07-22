@@ -27,8 +27,7 @@ public class Camiseta {
     public Camiseta() {
     }
 
-    public Camiseta(long id, int talla, String color, String marca, boolean lavada) {
-        this.id = id;
+    public Camiseta(int talla, String color, String marca, boolean lavada) {
         this.talla = talla;
         this.color = color;
         this.marca = marca;
