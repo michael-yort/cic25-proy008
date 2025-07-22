@@ -1,6 +1,7 @@
 package es.cic.curso25.proy008.controller;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,6 +55,7 @@ public class CamisetaControllerIntegrationTest {
         camiseta = camisetaRepository.save(camiseta);
 
         mockMvc.perform(get("/camiseta/" + camiseta.getId()))
+            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"));
     }
