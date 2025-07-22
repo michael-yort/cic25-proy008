@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Camiseta;
 import es.cic.curso25.proy008.service.CamisetaService;
 
@@ -28,6 +29,9 @@ public class CamisetaController {
 
     @PostMapping
     public Camiseta create(@RequestBody Camiseta camiseta) {
+        if (camiseta.getId() != 0) {
+            throw new ModificationSecurityException();
+        }
         return camisetaService.create(camiseta);
     }
 

@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Camiseta;
 import es.cic.curso25.proy008.repository.CamisetaRepository;
 
 @Service
 public class CamisetaService {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CamisetaService.class);
 
     @Autowired
@@ -29,6 +30,9 @@ public class CamisetaService {
     }
 
     public Camiseta create(Camiseta camiseta) {
+        if (camiseta.getId() != 0) {
+            throw new ModificationSecurityException("No se debe incluir un ID al crear una camiseta.");
+        }
         return camisetaRepository.save(camiseta);
     }
 
@@ -42,7 +46,7 @@ public class CamisetaService {
     public void delete(long id) {
         camisetaRepository.deleteById(id);
     }
-    
+
     public void deleteAll() {
         camisetaRepository.deleteAll();
     }
