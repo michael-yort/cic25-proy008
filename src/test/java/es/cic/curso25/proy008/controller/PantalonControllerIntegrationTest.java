@@ -1,4 +1,5 @@
 package es.cic.curso25.proy008.controller;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -125,8 +126,8 @@ public class PantalonControllerIntegrationTest {
                 pantalonRepository.save(pantalon2);
                 pantalonRepository.save(pantalon3);
 
-                // Paso 3: Hacer la petición GET a /pantalon
-                MvcResult resultado = mockMvc.perform(get("/pantalon/2"))
+                // Paso 3: Hacer la petición GET a /pantalon y ver los valores obtenidos por DebugConsole con .andDo(print())
+                MvcResult resultado = mockMvc.perform(get("/pantalon/2")).andDo(print())
                                 .andExpect(status().isOk())
                                 .andReturn();
 
