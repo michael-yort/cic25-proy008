@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Pantalon;
 import es.cic.curso25.proy008.service.PantalonService;
 
@@ -39,6 +40,10 @@ public class PantalonController {
     @PostMapping
     public Pantalon create(@RequestBody Pantalon pantalon) {
 
+        if (pantalon.getId() !=null) {
+            throw new ModificationSecurityException();
+            
+        }
         Pantalon pantalonCreado = pantalonService.create(pantalon);
 
         return pantalonCreado;

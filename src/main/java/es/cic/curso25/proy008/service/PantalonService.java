@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Pantalon;
 import es.cic.curso25.proy008.repository.PantalonRepository;
 
@@ -28,6 +29,9 @@ public class PantalonService {
     }
 
     public Pantalon create(Pantalon pantalon) {
+        if (pantalon.getId()!=null) {
+            throw new ModificationSecurityException("No se debe incluir un id al crear un pantalon");
+        }
         return pantalonRepository.save(pantalon);
     }
 

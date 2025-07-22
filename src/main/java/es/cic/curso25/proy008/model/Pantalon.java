@@ -13,16 +13,16 @@ public class Pantalon {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // @Column(nullable = false, length = 50)
+   
     private String marca;
 
-    // @Column(nullable = false, length = 20)
+   
     private String color;
 
-    // @Column(nullable = false)
+   
     private int talla;
 
-    // @Column(nullable = false)
+ 
     private boolean planchado = true;
 
     public Pantalon() {
