@@ -45,4 +45,8 @@ public class PantalonService {
         pantalonRepository.deleteById(id);
     }
 
+     public void deleteAll() {
+        pantalonRepository.deleteAll();
+    }
+
 }

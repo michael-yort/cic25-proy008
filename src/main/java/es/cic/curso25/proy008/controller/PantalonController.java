@@ -44,6 +44,13 @@ public class PantalonController {
         return pantalonCreado;
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+
+        pantalonService.delete(id);
+
+    }
+
     @PutMapping("/{id}")
     public Pantalon update(@PathVariable long id, @RequestBody Pantalon pantalon) {
 
@@ -52,13 +59,6 @@ public class PantalonController {
         Pantalon pantalonActualizado = pantalonService.update(pantalon);
 
         return pantalonActualizado;
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
-
-        pantalonService.delete(id);
-
     }
 
 }
