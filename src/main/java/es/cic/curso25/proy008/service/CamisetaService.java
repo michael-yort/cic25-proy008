@@ -24,13 +24,13 @@ public class CamisetaService {
         return camisetaRepository.findAll();
     }
 
-    public Optional<Camiseta> getById(long id) {
+    public Optional<Camiseta> getById(Long id) {
         LOGGER.info("Buscando camiseta con id: " + id);
         return camisetaRepository.findById(id);
     }
 
     public Camiseta create(Camiseta camiseta) {
-        if (camiseta.getId() != 0) {
+        if (camiseta.getId() != null) {
             throw new ModificationSecurityException("No se debe incluir un ID al crear una camiseta.");
         }
         return camisetaRepository.save(camiseta);
@@ -43,7 +43,7 @@ public class CamisetaService {
         return camisetaRepository.save(camiseta);
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         camisetaRepository.deleteById(id);
     }
 

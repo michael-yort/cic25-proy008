@@ -23,20 +23,20 @@ public class CamisetaController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Camiseta> getById(@PathVariable long id) {
+    public Optional<Camiseta> getById(@PathVariable Long id) {
         return camisetaService.getById(id);
     }
 
     @PostMapping
     public Camiseta create(@RequestBody Camiseta camiseta) {
-        if (camiseta.getId() != 0) {
+        if (camiseta.getId() != null) {
             throw new ModificationSecurityException();
         }
         return camisetaService.create(camiseta);
     }
 
     @PutMapping("/{id}")
-    public Camiseta update(@PathVariable long id, @RequestBody Camiseta camiseta) {
+    public Camiseta update(@PathVariable Long id, @RequestBody Camiseta camiseta) {
         camiseta.setId(id);
         return camisetaService.update(camiseta);
     }

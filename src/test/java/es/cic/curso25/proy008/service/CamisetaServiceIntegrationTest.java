@@ -75,7 +75,7 @@ public class CamisetaServiceIntegrationTest {
 
         Camiseta camiseta1 = new Camiseta(41, "verde", "Zara", false);
         camisetaService.create(camiseta1);
-        long id = camiseta1.getId();
+        Long id = camiseta1.getId();
 
         camisetaService.delete(id);
 
