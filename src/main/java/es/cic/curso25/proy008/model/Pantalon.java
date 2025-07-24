@@ -1,6 +1,5 @@
 package es.cic.curso25.proy008.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,17 +12,15 @@ public class Pantalon {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-   
     private String marca;
 
-   
     private String color;
 
-   
     private int talla;
 
- 
     private boolean planchado = true;
+
+    private Propietario propietario;
 
     public Pantalon() {
     }
@@ -75,4 +72,11 @@ public class Pantalon {
         this.planchado = planchado;
     }
 
+    public Propietario getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(Propietario propietario) {
+        this.propietario = propietario;
+    }
 }
