@@ -1,5 +1,6 @@
 package es.cic.curso25.proy008.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,17 +22,19 @@ public class Pantalon {
 
     private boolean planchado = true;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+
     private Propietario propietario;
 
     public Pantalon() {
     }
 
-    public Pantalon(String marca, String color, int talla, boolean planchado) {
+    public Pantalon(String marca, String color, int talla, boolean planchado, Propietario propietario) {
         this.marca = marca;
         this.color = color;
         this.talla = talla;
         this.planchado = planchado;
+        this.propietario = propietario;
     }
 
     public Long getId() {
@@ -81,4 +84,11 @@ public class Pantalon {
     public void setPropietario(Propietario propietario) {
         this.propietario = propietario;
     }
+
+    @Override
+    public String toString() {
+        return "Pantalon [id=" + id + ", marca=" + marca + ", color=" + color + ", talla=" + talla + ", planchado="
+                + planchado + ", propietario=" + propietario.getNombre() + "]";
+    }
+
 }

@@ -22,7 +22,7 @@ public class PantalonServiceIntegrationTest {
     @Test
     void testCreate() {
         pantalonService.deleteAll();
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
         Pantalon pantalonCreado = pantalonService.create(pantalon1);
         Long id = pantalonCreado.getId();
 
@@ -33,7 +33,7 @@ public class PantalonServiceIntegrationTest {
     @Test
     void testDelete() {
         pantalonService.deleteAll();
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
         Pantalon pantalonCreado = pantalonService.create(pantalon1);
         Long id = pantalonCreado.getId();
         assertTrue(id > 0);
@@ -49,9 +49,9 @@ public class PantalonServiceIntegrationTest {
     void testGet() {
         pantalonService.deleteAll();
         // Paso 1: Crear pantalones de prueba
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
-        Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true);
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
+        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false, null);
+        Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true, null);
 
         // Paso 2: Guardarlos en la base de datos
 
@@ -71,9 +71,9 @@ public class PantalonServiceIntegrationTest {
     void testGet2() {
         pantalonService.deleteAll();
         // Paso 1: Crear pantalones de prueba
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
-        Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true);
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
+        Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false, null);
+        Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true, null);
 
         // Paso 2: Guardarlos en la base de datos
 
@@ -94,7 +94,7 @@ public class PantalonServiceIntegrationTest {
     void testUpdate() {
         pantalonService.deleteAll();
         // Paso 1: Crear pantalones de prueba
-        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+        Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
 
         // Paso 2: Guardarlos en la base de datos
 

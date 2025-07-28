@@ -1,4 +1,5 @@
 package es.cic.curso25.proy008.controller;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,10 +27,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.cic.curso25.proy008.model.Pantalon;
 import es.cic.curso25.proy008.repository.PantalonRepository;
+import es.cic.curso25.proy008.service.PantalonService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PantalonControllerIntegrationTest {
+
 
         @Autowired
         private MockMvc mockMvc;
@@ -41,8 +46,8 @@ public class PantalonControllerIntegrationTest {
         @Test
         void testCreate() throws Exception {
 
-                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
-                //pantalon.setPropietario(null);
+                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true, null);
+                // pantalon.setPropietario(null);
 
                 String pantalonJson = objectMapper.writeValueAsString(pantalon);
 
@@ -66,7 +71,7 @@ public class PantalonControllerIntegrationTest {
 
         @Test
         void testDelete() throws Exception {
-                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true, null);
                 Pantalon pantalonGuardado = pantalonRepository.save(pantalon);
                 Long id = pantalonGuardado.getId();
 
@@ -82,8 +87,8 @@ public class PantalonControllerIntegrationTest {
         @Test
         void testGetAll() throws Exception {
                 // Paso 1: Crear pantalones de prueba
-                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
+                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false, null);
 
                 // Paso 2: Guardarlos en la base de datos
                 pantalonRepository.deleteAll();
@@ -117,9 +122,9 @@ public class PantalonControllerIntegrationTest {
         void testGet2() throws Exception {
 
                 // Paso 1: Crear pantalones de prueba
-                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
-                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false);
-                Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true);
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
+                Pantalon pantalon2 = new Pantalon("Nike", "Negro", 30, false, null);
+                Pantalon pantalon3 = new Pantalon("Jeans", "Gris", 38, true, null);
 
                 // Paso 2: Guardarlos en la base de datos
                 pantalonRepository.deleteAll();
@@ -127,7 +132,8 @@ public class PantalonControllerIntegrationTest {
                 pantalonRepository.save(pantalon2);
                 pantalonRepository.save(pantalon3);
 
-                // Paso 3: Hacer la petición GET a /pantalon y ver los valores obtenidos por DebugConsole con .andDo(print())
+                // Paso 3: Hacer la petición GET a /pantalon y ver los valores obtenidos por
+                // DebugConsole con .andDo(print())
                 MvcResult resultado = mockMvc.perform(get("/pantalon/2")).andDo(print())
                                 .andExpect(status().isOk())
                                 .andReturn();
@@ -151,7 +157,7 @@ public class PantalonControllerIntegrationTest {
         void testUpdate() throws Exception {
 
                 // 1. Crear un hábito
-                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true);
+                Pantalon pantalon1 = new Pantalon("Lewis", "Azul", 32, true, null);
 
                 String habitoJson = objectMapper.writeValueAsString(pantalon1);
                 String respuestaCreacion = mockMvc.perform(post("/pantalon")

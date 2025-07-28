@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import es.cic.curso25.proy008.exception.ModificationSecurityException;
 import es.cic.curso25.proy008.model.Pantalon;
 import es.cic.curso25.proy008.repository.PantalonRepository;
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class PantalonService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PantalonService.class);
@@ -29,11 +31,13 @@ public class PantalonService {
     }
 
     public Pantalon create(Pantalon pantalon) {
-        if (pantalon.getId()!=null) {
+        if (pantalon.getId() != null) {
             throw new ModificationSecurityException("No se debe incluir un id al crear un pantalon");
         }
-        LOGGER.info("Pantalon creado correctamente");
-        return pantalonRepository.save(pantalon);
+        Pantalon pantalonACrear = pantalon;
+        LOGGER.info("Pantalon antes de ser creado correctamente");
+        return pantalonRepository.save(pantalonACrear);
+        
     }
 
     public Pantalon update(Pantalon pantalon) {
@@ -47,11 +51,11 @@ public class PantalonService {
         if (!pantalonRepository.existsById(id)) {
             throw new IllegalArgumentException("El pantalón no existe.");
         }
-        LOGGER.info("Borrando pantalon con id "+ id);
+        LOGGER.info("Borrando pantalon con id " + id);
         pantalonRepository.deleteById(id);
     }
 
-     public void deleteAll() {
+    public void deleteAll() {
         pantalonRepository.deleteAll();
     }
 

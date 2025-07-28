@@ -2,6 +2,7 @@ package es.cic.curso25.proy008.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,18 +21,18 @@ public class Propietario {
     private int peso;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "propietario")
+    @OneToOne(mappedBy = "propietario", cascade = CascadeType.REMOVE)
     private Pantalon pantalon;
 
     public Propietario() {
     }
 
-    // public Propietario(String nombre, int talla, int peso) {
+    public Propietario(String nombre, int talla, int peso) {
 
-    //     this.nombre = nombre;
-    //     this.talla = talla;
-    //     this.peso = peso;
-    // }
+        this.nombre = nombre;
+        this.talla = talla;
+        this.peso = peso;
+    }
 
     public Long getId() {
         return id;
@@ -65,16 +66,20 @@ public class Propietario {
         this.peso = peso;
     }
 
-    @Override
-    public boolean equals(Object arg0) {
-        // TODO Auto-generated method stub
-        return super.equals(arg0);
+    public Pantalon getPantalon() {
+        return pantalon;
+    }
+
+    public void setPantalon(Pantalon pantalon) {
+        this.pantalon = pantalon;
     }
 
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
-        return super.toString();
+        return "Propietario [id=" + id + ", nombre=" + nombre + ", talla=" + talla + ", peso=" + peso + ", pantalon="
+                + pantalon + "]";
     }
+
+    
 
 }
