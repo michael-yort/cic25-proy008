@@ -1,9 +1,12 @@
 package es.cic.curso25.proy008.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Propietario {
@@ -16,15 +19,19 @@ public class Propietario {
     private int talla;
     private int peso;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "propietario")
+    private Pantalon pantalon;
+
     public Propietario() {
     }
 
-    public Propietario(String nombre, int talla, int peso) {
+    // public Propietario(String nombre, int talla, int peso) {
 
-        this.nombre = nombre;
-        this.talla = talla;
-        this.peso = peso;
-    }
+    //     this.nombre = nombre;
+    //     this.talla = talla;
+    //     this.peso = peso;
+    // }
 
     public Long getId() {
         return id;

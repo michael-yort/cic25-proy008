@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Pantalon {
@@ -20,6 +21,7 @@ public class Pantalon {
 
     private boolean planchado = true;
 
+    @OneToOne
     private Propietario propietario;
 
     public Pantalon() {

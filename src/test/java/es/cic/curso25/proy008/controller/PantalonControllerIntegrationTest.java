@@ -42,6 +42,7 @@ public class PantalonControllerIntegrationTest {
         void testCreate() throws Exception {
 
                 Pantalon pantalon = new Pantalon("Lewis", "Azul", 32, true);
+                //pantalon.setPropietario(null);
 
                 String pantalonJson = objectMapper.writeValueAsString(pantalon);
 
