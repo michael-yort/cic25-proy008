@@ -22,7 +22,7 @@ public class Pantalon {
 
     private boolean planchado = true;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
 
     private Propietario propietario;
 
@@ -89,6 +89,31 @@ public class Pantalon {
     public String toString() {
         return "Pantalon [id=" + id + ", marca=" + marca + ", color=" + color + ", talla=" + talla + ", planchado="
                 + planchado + ", propietario=" + propietario.getNombre() + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Pantalon other = (Pantalon) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
     }
 
 }

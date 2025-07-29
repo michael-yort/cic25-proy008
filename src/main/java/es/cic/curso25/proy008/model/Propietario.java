@@ -16,6 +16,14 @@ public class Propietario {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
     private String nombre;
     private int talla;
     private int peso;
@@ -75,11 +83,26 @@ public class Propietario {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Propietario other = (Propietario) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "Propietario [id=" + id + ", nombre=" + nombre + ", talla=" + talla + ", peso=" + peso + ", pantalon="
                 + pantalon + "]";
     }
-
-    
 
 }
